@@ -1,5 +1,6 @@
 TARGET=jscope.exe
 TARGET+=jfft.exe
+TARGET+=jsine.exe
 
 CFLAGS=-Wall -Werror
 CFLAGS+=-g -O0

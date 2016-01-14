@@ -45,8 +45,10 @@ int process_audio( jack_nframes_t nframes, void *arg)
 }
 
 int main( int argc, char *argv[]) {
+#ifdef WIN32
 	freopen( "CON", "w", stdout );
 	freopen( "CON", "w", stderr );
+#endif
 	int ww = 512;
 	int hh = 200;
 	jack_status_t status;

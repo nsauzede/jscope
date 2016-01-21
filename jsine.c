@@ -23,11 +23,25 @@ void jack_shutdown( void *arg)
 	end = 1;
 }
 
+int N;
+
 int cb( jack_nframes_t nframes, void *arg)
 {
 	sample_t *buf = (sample_t *)jack_port_get_buffer( jport, nframes);
 	int i, n = (int)nframes;
 	static int t = 0;
+
+	static int old_t = -99999999;
+	if (t > (old_t + 20*N))
+	{
+		f *= 2;
+		if (f >= (sr / 2))
+		{
+			f = 81.5;
+		}
+		old_t = t;
+//		printf( "freq=%.1f\n", f);
+	}
 
 	for (i = 0; i < n; i++)
 	{
@@ -42,7 +56,6 @@ int cb( jack_nframes_t nframes, void *arg)
 
 int main( int argc, char *argv[])
 {
-	int N;
 	char *name = "jsine";
 	char *connect = NULL;
 	int arg = 1;

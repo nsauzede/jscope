@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <math.h>
+
 #include <SDL.h>
 #include <jack/jack.h>
 #include <fftw3.h>
@@ -157,6 +159,7 @@ int main( int argc, char *argv[]) {
 					in[n] = samples[(n0 + n) % sampleslen];
 				FFTW_EXECUTE( p);
 				double min = 0, max = 0;
+#if 1
 				for (n = 0; n < nsamples; n++)
 				{
 					out[n] = abs( out[n]);
@@ -165,6 +168,16 @@ int main( int argc, char *argv[]) {
 					if (out[n] < min)
 						min = out[n];
 				}
+#else
+				for (n = 0; n < nsamples / 2; n++)
+				{
+					out[n] = sqrt( out[n] * out[n] + out[nsamples / 2 + n] * out[nsamples / 2 + n]);
+					if (out[n] > max)
+						max = out[n];
+					if (out[n] < min)
+						min = out[n];
+				}
+#endif
 				if (max < 0.001)
 					max= 1;
 #if 0
@@ -176,7 +189,14 @@ int main( int argc, char *argv[]) {
 				{
 //					if (n % deci)
 //						continue;
+#if 0
 					rect.x = ww * n / (nsamples / 2);
+#else
+					if (!n)
+						rect.x = 0;
+					else
+						rect.x = ww * log10( n) / log10( nsamples / 2);
+#endif
 					rect.y = hh / 2 - out[n] * hh / 2 / max;
 					SDL_FillRect( screen, &rect, col);
 				}

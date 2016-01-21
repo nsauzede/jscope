@@ -38,12 +38,11 @@ F_CFLAGS+= -DFFTW_DESTROY_PLAN=fftw_destroy_plan
 F_CFLAGS+= -DFFTW_PLAN_R2R_1D=fftw_plan_r2r_1d
 F_CFLAGS+= -DFFTW_TYPE=double
 F_CFLAGS+= -DFFT
-F_LDFLAGS= -lfftw3 -lm
 
 all:$(TARGET)
 
 jfft.exe:CFLAGS+=$(F_CFLAGS)
-jfft.exe:LDFLAGS+=$(F_LDFLAGS)
+jfft.exe:LDFLAGS+=$(F_LDFLAGS) -lfftw3 -lm
 jsine.exe:LDFLAGS+=$(F_LDFLAGS)
 
 %.exe:	%.o

@@ -81,9 +81,15 @@ int main( int argc, char *argv[]) {
 
 	
 	FFTW_PLAN p = (void *)0xdeadbeef;
-	FFTW_TYPE *in, *out;
+	FFTW_TYPE *in, *out, *out0;
 	in = fftw_alloc_real( bufsize);
 	out = fftw_alloc_real( bufsize);
+	out0 = fftw_alloc_real( bufsize);
+	int i;
+	for (i = 0; i < bufsize; i++)
+	{
+		out0[i] = 0.0;
+	}
 	printf( "in=%p out=%p bufsize=%d\n", in, out, bufsize);
 	p = FFTW_PLAN_R2R_1D( bufsize, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
 	printf( "got plan=%p\n", p);
@@ -180,23 +186,12 @@ int main( int argc, char *argv[]) {
 #endif
 				if (max < 0.001)
 					max= 1;
-#if 0
-				int deci = 1;
-				if (nsamples > ww)
-					deci = nsamples / ww;
-#endif
 				for (n = 0; n < nsamples / 2; n++)
 				{
-//					if (n % deci)
-//						continue;
-#if 0
-					rect.x = ww * n / (nsamples / 2);
-#else
 					if (!n)
 						rect.x = 0;
 					else
 						rect.x = ww * log10( n) / log10( nsamples / 2);
-#endif
 					rect.y = hh / 2 - out[n] * hh / 2 / max;
 					SDL_FillRect( screen, &rect, col);
 				}

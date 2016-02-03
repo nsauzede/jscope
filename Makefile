@@ -43,7 +43,9 @@ F_CFLAGS+= -DFFT
 all:$(TARGET)
 
 jfft.exe:CFLAGS+=$(F_CFLAGS)
+jpitch.exe:CFLAGS+=$(F_CFLAGS)
 jfft.exe:LDFLAGS+=$(F_LDFLAGS) -lfftw3 -lm
+jpitch.exe:LDFLAGS+=$(F_LDFLAGS) -lfftw3 -lm
 jsine.exe:LDFLAGS+=$(F_LDFLAGS)
 
 %.exe:	%.o

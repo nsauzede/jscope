@@ -40,6 +40,8 @@ F_CFLAGS+= -DFFTW_PLAN_R2R_1D=fftw_plan_r2r_1d
 F_CFLAGS+= -DFFTW_TYPE=double
 F_CFLAGS+= -DFFT
 
+LDLIBS+=-lm
+
 all:$(TARGET)
 
 jfft.exe:CFLAGS+=$(F_CFLAGS)
@@ -49,7 +51,7 @@ jpitch.exe:LDFLAGS+=$(F_LDFLAGS) -lfftw3 -lm
 jsine.exe:LDFLAGS+=$(F_LDFLAGS)
 
 %.exe:	%.o
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
 clean:
 	$(RM) $(TARGET) *.o

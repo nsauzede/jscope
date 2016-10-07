@@ -9,7 +9,7 @@ CFLAGS+=`sdl-config --cflags`
 LDFLAGS+=`sdl-config --libs`
 
 UNAME=$(shell uname)
-ifeq ($(UNAME),MINGW32_NT-6.1)
+ifeq ($(UNAME),MINGW64_NT-6.3)
 WIN32=1
 endif
 
@@ -18,7 +18,7 @@ LDFLAGS+=-mno-windows
 JACK="/c/Program Files (x86)/Jack"
 CFLAGS+=-I$(JACK)/includes
 #LDFLAGS+=-L$(JACK)/lib -ljack
-LDFLAGS+=$(JACK)/lib/libjack.lib
+LDFLAGS+=$(JACK)/lib/libjack64.lib
 FFTP="${HOME}/tmp/build-fftw/the_install"
 FFTPinc=$(FFTP)/include
 FFTPlib=$(FFTP)/lib

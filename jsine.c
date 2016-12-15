@@ -23,6 +23,7 @@ void jack_shutdown( void *arg)
 	end = 1;
 }
 
+int fswitch = 1;
 int N;
 
 int cb( jack_nframes_t nframes, void *arg)
@@ -34,13 +35,14 @@ int cb( jack_nframes_t nframes, void *arg)
 	static int old_t = -99999999;
 	if (t > (old_t + 20*N))
 	{
-		f *= 2;
-		if (f >= (sr / 2))
-		{
-			f = 81.5;
+		if (fswitch) {
+			f *= 2;
+			if (f >= (sr / 2)) {
+				f = 81.5;
+			}
 		}
 		old_t = t;
-//		printf( "freq=%.1f\n", f);
+		printf( "freq=%.1f\n", f);
 	}
 
 	for (i = 0; i < n; i++)
@@ -77,6 +79,16 @@ int main( int argc, char *argv[])
 				connect = argv[arg++];
 			else
 				printf( "error : missing connect\n");
+		}
+		else if (!strcmp( argv[arg], "-switch"))
+		{
+			arg++;
+			fswitch = 0;
+		}
+		else if (!strcmp( argv[arg], "-startf"))
+		{
+			arg++;
+			sscanf(argv[arg++], "%lf", &f);
 		}
 	}
 

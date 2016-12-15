@@ -42,7 +42,6 @@ int process_audio( jack_nframes_t nframes, void *arg)
 		samples[samplehead] = buf[i];
 		samplehead = (samplehead + 1) % sampleslen;
 	}
-
 	return 0;
 }
 
@@ -112,6 +111,9 @@ int main( int argc, char *argv[]) {
 						case SDLK_ESCAPE:
 							done = 1;
 							break;
+						case SDLK_SPACE:
+							runnotstop = 1 - runnotstop;
+							break;
 						default:
 							break;
 					}
@@ -132,6 +134,7 @@ int main( int argc, char *argv[]) {
 		rect.y = 0;
 		rect.w = ww;
 		rect.h = hh;
+		if (!runnotstop)
 		{
 			col = black;
 			SDL_FillRect( screen, &rect, col);

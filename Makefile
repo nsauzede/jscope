@@ -5,8 +5,8 @@ TARGET+=jpitch.exe
 
 CFLAGS=-Wall -Werror
 CFLAGS+=-g -O0
-CFLAGS+=`sdl-config --cflags`
-LDFLAGS+=`sdl-config --libs`
+SDL_CFLAGS+=`sdl-config --cflags`
+SDL_LDFLAGS+=`sdl-config --libs`
 
 UNAME=$(shell uname)
 ifeq ($(UNAME),MINGW64_NT-6.3)
@@ -44,11 +44,13 @@ LDLIBS+=-lm
 
 all:$(TARGET)
 
-jfft.exe:CFLAGS+=$(F_CFLAGS)
-jpitch.exe:CFLAGS+=$(F_CFLAGS)
-jfft.exe:LDFLAGS+=$(F_LDFLAGS) -lfftw3 -lm
-jpitch.exe:LDFLAGS+=$(F_LDFLAGS) -lfftw3 -lm
+jfft.exe:CFLAGS+=$(F_CFLAGS) $(SDL_CFLAGS)
+jpitch.exe:CFLAGS+=$(F_CFLAGS) $(SDL_CFLAGS)
+jscope.exe:CFLAGS+=$(SDL_CFLAGS)
+jfft.exe:LDFLAGS+=$(F_LDFLAGS) -lfftw3 -lm $(SDL_LDFLAGS)
+jpitch.exe:LDFLAGS+=$(F_LDFLAGS) -lfftw3 -lm $(SDL_LDFLAGS)
 jsine.exe:LDFLAGS+=$(F_LDFLAGS)
+jscope.exe:LDFLAGS+=$(SDL_LDFLAGS)
 
 %.exe:	%.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)

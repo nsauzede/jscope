@@ -68,8 +68,12 @@ int main( int argc, char *argv[]) {
 	SDL_Surface *screen = 0;
 	SDL_Init( SDL_INIT_VIDEO);
 	atexit( SDL_Quit);
-	screen = SDL_SetVideoMode( ww, hh, 32, 0);
-	SDL_EnableKeyRepeat( SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+	SDL_Window *sdlWindow = 0;
+	SDL_Renderer *sdlRenderer = 0;
+	SDL_Texture *sdlTexture = 0;
+	SDL_CreateWindowAndRenderer(ww, hh, 0, &sdlWindow, &sdlRenderer);
+	screen = SDL_CreateRGBSurface( 0, ww, hh, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+	sdlTexture = SDL_CreateTexture( sdlRenderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, ww, hh);
 	visiblelen = ww;
 	visible = malloc( visiblelen * sizeof(visible[0]));
 	int done = 0;
@@ -162,7 +166,10 @@ int main( int argc, char *argv[]) {
 			}
 		}
 		static int fps = 0;
-		SDL_UpdateRect( screen, 0, 0, 0, 0);
+		SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
+		SDL_RenderClear(sdlRenderer);
+		SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
+		SDL_RenderPresent(sdlRenderer);
 		fps++;
 		static int oldticks = 0;
 		int ticks = SDL_GetTicks();

@@ -1,12 +1,12 @@
-TARGET=jscope.exe
+TARGET:=
+TARGET+=jscope.exe
 TARGET+=jfft.exe
 TARGET+=jsine.exe
-TARGET+=jpitch.exe
 
 CFLAGS=-Wall -Werror
 CFLAGS+=-g -O0
-SDL_CFLAGS+=`sdl-config --cflags`
-SDL_LDFLAGS+=`sdl-config --libs`
+SDL_CFLAGS+=`sdl2-config --cflags`
+SDL_LDFLAGS+=`sdl2-config --libs`
 
 UNAME=$(shell uname)
 ifeq ($(UNAME),MINGW64_NT-6.3)
@@ -24,9 +24,6 @@ FFTPinc=$(FFTP)/include
 FFTPlib=$(FFTP)/lib
 F_LDFLAGS= -L$(FFTPlib)
 
-#YACAPI=~/tmp/build-yacapi-compat/install
-#CFLAGS+=`$(YACAPI)/bin/yacapi-config --compat --cflags`
-#LDFLAGS+=`$(YACAPI)/bin/yacapi-config --static-libs`
 LDFLAGS+=-lpthread
 F_CFLAGS+= -I$(FFTPinc)
 else
@@ -45,12 +42,10 @@ LDLIBS+=-lm
 all:$(TARGET)
 
 jfft.exe:CFLAGS+=$(F_CFLAGS) $(SDL_CFLAGS)
-jpitch.exe:CFLAGS+=$(F_CFLAGS) $(SDL_CFLAGS)
 jscope.exe:CFLAGS+=$(SDL_CFLAGS)
-jfft.exe:LDFLAGS+=$(F_LDFLAGS) -lfftw3 -lm $(SDL_LDFLAGS)
-jpitch.exe:LDFLAGS+=$(F_LDFLAGS) -lfftw3 -lm $(SDL_LDFLAGS)
-jsine.exe:LDFLAGS+=$(F_LDFLAGS)
 jscope.exe:LDFLAGS+=$(SDL_LDFLAGS)
+jfft.exe:LDFLAGS+=$(F_LDFLAGS) -lfftw3 -lm $(SDL_LDFLAGS)
+jsine.exe:LDFLAGS+=$(F_LDFLAGS)
 
 %.exe:	%.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)

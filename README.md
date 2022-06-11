@@ -8,12 +8,12 @@ sudo apt install libsdl2-dev libjack-jackd2-dev libfftw3-dev
 ```
 make && ./jscope2.exe
 ```
-Connect "jscope" input to some Jack audio output to see something like below.
+Connect "jscope" Jack input to some Jack audio output to see something like below.
 ![jscope2 capture](jscope2.png)
 
-Space to freeze display.
-Left/Right to change decimation (similar to time zoom).
-Escape to quit.
+- Space to freeze display
+- Left/Right to change decimation (similar to time zoom)
+- Escape to quit
 
 # Ideas
 create jpitch, that would display detected pitch ? (maybe with inspiration from Tartini ?)

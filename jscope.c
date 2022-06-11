@@ -1,3 +1,7 @@
+/*
+ * Copyright(c) 2022 Nicolas Sauzede (nsauzede@laposte.net)
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 #include <stdio.h>
 #include <SDL.h>
 #include <jack/jack.h>

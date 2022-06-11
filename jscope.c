@@ -94,6 +94,8 @@ int main( int argc, char *argv[]) {
 						case SDLK_ESCAPE:
 							done = 1;
 							break;
+						case SDLK_SPACE:
+							runnotstop = 1 - runnotstop;
 						case SDLK_LEFT:
 							if (deci0 > 1)
 							{

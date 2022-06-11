@@ -1,5 +1,6 @@
 TARGET:=
 TARGET+=jscope.exe
+TARGET+=jscope2.exe
 TARGET+=jfft.exe
 TARGET+=jsine.exe
 
@@ -44,6 +45,8 @@ all:$(TARGET)
 jfft.exe:CFLAGS+=$(F_CFLAGS) $(SDL_CFLAGS)
 jscope.exe:CFLAGS+=$(SDL_CFLAGS)
 jscope.exe:LDFLAGS+=$(SDL_LDFLAGS)
+jscope2.exe:CFLAGS+=$(SDL_CFLAGS)
+jscope2.exe:LDFLAGS+=$(SDL_LDFLAGS)
 jfft.exe:LDFLAGS+=$(F_LDFLAGS) -lfftw3 -lm $(SDL_LDFLAGS)
 jsine.exe:LDFLAGS+=$(F_LDFLAGS)
 
@@ -51,7 +54,7 @@ jsine.exe:LDFLAGS+=$(F_LDFLAGS)
 	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
 clean:
-	$(RM) $(TARGET) *.o
+	$(RM) *.exe *.o
 
 clobber: clean
 	$(RM) *~

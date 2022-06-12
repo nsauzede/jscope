@@ -18,13 +18,13 @@ double *visible = 0;
 int nvisible = 0;
 
 int frameslost = 0;
-int runnotstop = 0;
+int stopnotrun = 0;
 int process_audio( jack_nframes_t nframes, void *arg)
 {
 	jack_default_audio_sample_t *buf;
 	jack_port_t *input_port = (jack_port_t *)arg;
 	buf = jack_port_get_buffer( input_port, nframes);
-	if (runnotstop)
+	if (stopnotrun)
 		return 0;
 	int i;
 	for (i = 0; i < nframes; i++)
@@ -99,7 +99,7 @@ int main( int argc, char *argv[]) {
 							done = 1;
 							break;
 						case SDLK_SPACE:
-							runnotstop = 1 - runnotstop;
+							stopnotrun = 1 - stopnotrun;
 						case SDLK_LEFT:
 							if (deci0 > 1)
 							{

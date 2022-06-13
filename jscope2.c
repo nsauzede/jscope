@@ -22,6 +22,9 @@ int stopnotrun = 0;
 int trig = 0;
 int trigged = 0;
 sample_t triglev = 0.3;
+sample_t triglevd = 0.1;
+sample_t trigpos = 0.25;
+sample_t trigposd = 0.01;
 int process_audio(jack_nframes_t nframes, void *arg) {
   jack_default_audio_sample_t *buf;
   jack_port_t *input_port = (jack_port_t *)arg;
@@ -128,12 +131,24 @@ int main(int argc, char *argv[]) {
           trigged = 0;
           break;
         case SDLK_LEFT:
+          if (trigpos > 0) {
+            trigpos -= trigposd;
+            printf("trigpos=%f\n", trigpos);
+          }
+          break;
+        case SDLK_RIGHT:
+          if (trigpos < 1 - trigposd) {
+            trigpos += trigposd;
+            printf("trigpos=%f\n", trigpos);
+          }
+          break;
+        case SDLK_PAGEUP:
           if (deci0 > 1) {
             deci0--;
             printf("deci0=%d\n", deci0);
           }
           break;
-        case SDLK_RIGHT:
+        case SDLK_PAGEDOWN:
           if (deci0 < (visiblelen / 2)) {
             deci0++;
             printf("deci0=%d\n", deci0);
@@ -141,13 +156,13 @@ int main(int argc, char *argv[]) {
           break;
         case SDLK_DOWN:
           if (triglev > -2) {
-            triglev -= 0.1;
+            triglev -= triglevd;
             printf("triglev=%f\n", triglev);
           }
           break;
         case SDLK_UP:
           if (triglev < 2) {
-            triglev += 0.1;
+            triglev += triglevd;
             printf("triglev=%f\n", triglev);
           }
           break;
@@ -206,11 +221,19 @@ int main(int argc, char *argv[]) {
         rect.y = hh / 2 - visible[n] * hh / 2;
         SDL_FillRect(screen, &rect, col);
         if (!stopnotrun) {
-          printf("trig=%d trigged=%d max=%f smp=%f triglev=%f\n", trig, trigged, max, visible[n], triglev);
+//          printf("trig=%d trigged=%d max=%f smp=%f triglev=%f trigpos=%f\n", trig, trigged, max, visible[n], triglev, trigpos);
         }
       }
-      rect.x = visiblelen / 4;
+      int pos = ww * trigpos;
+      rect.x = pos;
+      rect.y = 0;
+      rect.w = 1;
+      rect.h = hh;
+      SDL_FillRect(screen, &rect, red);
+      rect.x = 0;
       rect.y = hh / 2 - triglev * hh / 2;
+      rect.w = ww;
+      rect.h = 1;
       SDL_FillRect(screen, &rect, red);
       rect.x = mx;
       rect.y = 0;
@@ -222,7 +245,26 @@ int main(int argc, char *argv[]) {
       rect.w = ww;
       rect.h = 1;
       SDL_FillRect(screen, &rect, blue);
-      int pos = visiblelen / 4;
+#if 1
+      sample_t smp0;
+      for (int i = 0; i < pos; i++) {
+        smp0 = visible[i];
+        if (smp0 >= triglev) {
+          break;
+        }
+      }
+      if (trig && !trigged && smp0 >= triglev) {
+        if (!stopnotrun) {
+          _i0 = pos;
+          _i1 = pos;
+          _smp0 = smp0;
+          _smp1 = smp0;
+          printf("TRIG lev=%f pos=%f smp0=%f smp1=%f i=%d n=%d\n", triglev, trigpos, smp0, smp0, pos, n);
+        }
+        trigged = 1;
+        stopnotrun = 1;
+      }
+#else
       sample_t smp0 = visible[pos];
       for (int i = 1; i < 20; i++) {
         sample_t smp1 = visible[pos + i];
@@ -232,12 +274,13 @@ int main(int argc, char *argv[]) {
             _i1 = i;
             _smp0 = smp0;
             _smp1 = smp1;
-            printf("TRIG lev=%f smp0=%f smp1=%f i=%d n=%d\n", triglev, smp0, smp1, i, n);
+            printf("TRIG lev=%f pos=%f smp0=%f smp1=%f i=%d n=%d\n", triglev, trigpos, smp0, smp1, i, n);
           }
           trigged = 1;
           stopnotrun = 1;
         }
       }
+#endif
     }
     static int fps = 0;
     SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
